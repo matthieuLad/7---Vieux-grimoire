@@ -1,6 +1,14 @@
 const express = require('express');
+const mongoose = require('mongoose');
+const booksRoutes = require('./routes/books')
+const userRoutes = require('./routes/user');
 
 const app = express();
+mongoose.connect('mongodb+srv://mattOCGrimoire:OLpXppOon2A6FHOg@cluster0.viomfqh.mongodb.net/?retryWrites=true&w=majority',
+  { useNewUrlParser: true,
+    useUnifiedTopology: true })
+  .then(() => console.log('Connexion à MongoDB réussie !'))
+  .catch(() => console.log('Connexion à MongoDB échouée !'));
 app.use(express.json());
 
 app.use((req, res, next) => {
@@ -9,6 +17,9 @@ app.use((req, res, next) => {
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
     next();
   });
+
+  app.use('/api/books', booksRoutes);
+  app.use('/api/auth', userRoutes);
 
 
 module.exports = app;
