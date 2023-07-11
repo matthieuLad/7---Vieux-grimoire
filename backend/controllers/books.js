@@ -4,11 +4,8 @@ const fs = require('fs');
 
 exports.createBook = (req, res, next) => {
     const bookObject = JSON.parse(req.body.book);
-    const yearNumber = parseInt(bookObject.year);
-    delete bookObject.year;
     const book = new Book({
         ...bookObject,
-        year: yearNumber,
         imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
     });
     book.save()
@@ -19,7 +16,14 @@ exports.createBook = (req, res, next) => {
 }
 
 exports.getOneBook = (req, res, next) => {
-
+    Book.findOne({
+        _id: req.params.id
+    })
+        .then(
+            (book) => {res.status(200).json(book)}
+        )
+        .catch((error) => {res.status(404).json({ error });
+    });
 }
 
 exports.modifyBook = (req, res, next) => {
