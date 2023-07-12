@@ -83,7 +83,12 @@ exports.getAllBooks = (req, res, next) => {
 }
 
 exports.getBestBooks = (req, res, next) => {
-
+    Book.find()
+        .then((books) => {
+            books.sort((a, b) => a.averageRating - b.averageRating).splice(0,books.length-3);
+            res.status(200).json(books);
+        })
+        .catch((error) => res.status(400).json({ error: error }));
 }
 
 exports.rateBook = (req, res, next) => {
